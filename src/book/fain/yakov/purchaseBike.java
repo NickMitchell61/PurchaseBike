@@ -1,22 +1,22 @@
 package book.fain.yakov;
 
 
-import java.awt.Button;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.*;
-
 
 
 public class purchaseBike extends JFrame implements ActionListener{
 	
 	JPanel windowContent;
-	JTextField modelBike;
 	JTextField countBike;
 	JButton enterThePurchase;
 	JLabel text;
+	JComboBox modelBike1;
 	
 	public purchaseBike() {
 		
@@ -39,24 +39,31 @@ public class purchaseBike extends JFrame implements ActionListener{
 		bottomPanel.add(text);
 		text.setText("Виберіть модель та кількість шт.");
 		
-		JPanel p1 = new JPanel();
-		windowContent.add(p1);
 		
-		modelBike = new JFormattedTextField("");
-		modelBike.setColumns(30);
-		modelBike.setFont(font);
+		JPanel p1 = new JPanel();
+		windowContent.add("South", p1);
+		
+		String[] bikes = {"Bike1", "Bike2", "Bike3", "Bike4", "Bike5"};
+		modelBike1 = new JComboBox(bikes);
+		modelBike1.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {		
+				
+			}
+		});
+		modelBike1.setFont(font);
 		
 		JLabel lab1 = new JLabel("Model Bike: ");
 		lab1.setFont(font);
 		p1.add(lab1);
-		p1.add(modelBike);
+		p1.add(modelBike1);
 		
 		
 		JPanel p2 = new JPanel();
 		windowContent.add(p2);
 		
 		countBike = new JFormattedTextField(0);
-		countBike.setColumns(30);
+		countBike.setColumns(10);
 		countBike.setFont(font);
 		
 		JLabel lab2 = new JLabel("Count Bike: ");
@@ -66,7 +73,7 @@ public class purchaseBike extends JFrame implements ActionListener{
 		
 		
 		setContentPane(windowContent);
-		setSize(800, 200);
+		setSize(600, 200);
 		setLocation(600, 200);
 		setTitle("Purchase Bike");
 		setVisible(true);
@@ -77,7 +84,7 @@ public class purchaseBike extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		String selectedModel = modelBike.getText();
+		String selectedModel = (String) modelBike1.getSelectedItem();
 		String selectedQuantity = countBike.getText();
 		
 		int quantity = Integer.parseInt(selectedQuantity);
@@ -87,10 +94,10 @@ public class purchaseBike extends JFrame implements ActionListener{
 			checkOrder(selectedModel, quantity);
 			text.setText("Ваше замовлення прийнято!");
 		} catch (TooManyBikesException e1) {
-			text.setText(e1.getMessage());
 		}
 		
 	}
+	
 	
 	void checkOrder (String modelBike, int quantity) throws TooManyBikesException{
 		
@@ -113,23 +120,23 @@ public class purchaseBike extends JFrame implements ActionListener{
 			throw new TooManyBikesException("Заповніть поле моделі");
 		} else if (quantity == 0) {
 			throw new TooManyBikesException("Заповніть поле кількості велосипедів.");
-		}
+		}	
 		
 	}
-
 	
 	
 	public static void main(String[] args) {		
 		new purchaseBike();
 	}
 	
+	
 }
+
 
 class TooManyBikesException extends Exception {
 	
 	public TooManyBikesException(String newExc) {
 		
-		super(newExc);
-		
+		JOptionPane.showMessageDialog(null, newExc, "Error", JOptionPane.INFORMATION_MESSAGE);
 	}
 }
